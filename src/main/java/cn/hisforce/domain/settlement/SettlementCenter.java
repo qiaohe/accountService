@@ -27,30 +27,26 @@ public class SettlementCenter {
         return referenceNo.startsWith(ORDER_MESSAGE_PREFIX);
     }
 
-    private void settleOrder(MedicalOrder order) {
+    private AngelGuiderShare settleOrder(MedicalOrder order) {
         AngelGuiderShare share = new AngelGuiderShare(order);
         share.settle(order.getRegistration());
-        angelGuiderShareRepository.save(share);
+        return angelGuiderShareRepository.save(share);
     }
 
-    private void settleRegistration(Registration registration) {
+    private AngelGuiderShare settleRegistration(Registration registration) {
         AngelGuiderShare share = new AngelGuiderShare(registration);
         share.settle(registration);
-        angelGuiderShareRepository.save(share);
+        return angelGuiderShareRepository.save(share);
     }
 
     private boolean isSettledBy(Long registrationId) {
         return angelGuiderShareRepository.findByRegistrationId(registrationId) != null;
     }
 
-    public void settle(String message) {
-        if (isOrderMessage(message)) {
-            settleOrder(medicalOrderRepository.findByOrderNo(message));
-            return;
-        }
+    public AngelGuiderShare settle(String message) {
+        if (isOrderMessage(message)) return settleOrder(medicalOrderRepository.findByOrderNo(message));
         final Long registrationId = Long.valueOf(message);
-        if (!isSettledBy(registrationId))
-            settleRegistration(registrationRepository.findOne(registrationId));
-
+        if (!isSettledBy(registrationId)) return settleRegistration(registrationRepository.findOne(registrationId));
+        return null;
     }
 }

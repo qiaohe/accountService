@@ -1,5 +1,6 @@
 package cn.hisforce.listener;
 
+import cn.hisforce.domain.AngelGuiderShare;
 import cn.hisforce.domain.settlement.SettlementCenter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +25,8 @@ public class MessageListener {
     }
 
     public void onMessage(String message) {
-        settlementCenter.settle(message);
+        AngelGuiderShare share = settlementCenter.settle(message);
+
         latch.countDown();
     }
 }
