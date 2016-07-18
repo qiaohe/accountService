@@ -12,7 +12,7 @@ public class RedisRepository {
     @Autowired
     private StringRedisTemplate template;
 
-    public Long getNext(String key){
+    public Long getNext(String key) {
         return template.opsForValue().increment(key, 1);
     }
 }

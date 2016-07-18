@@ -1,5 +1,6 @@
 package cn.hisforce.domain.transaction;
 
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -8,6 +9,7 @@ import java.io.Serializable;
 /**
  * Created by Johnson on 2016/7/18.
  */
+@Entity
 public class TransactionCode implements Serializable {
     private static final long serialVersionUID = 6556119174698187457L;
     @Id

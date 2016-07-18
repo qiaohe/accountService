@@ -8,8 +8,6 @@ import cn.hisforce.domain.Registration;
  * Created by Johnson on 2016/7/17.
  */
 public final class ShareBuilder {
-
-
     public AngelGuiderShare build(Registration registration) {
         AngelGuiderShare share = new AngelGuiderShare(registration);
         share.settle(registration);

@@ -33,6 +33,7 @@ public class AngelGuiderShare implements Serializable {
     private Double angelGuiderShare;
     private Double platformShare;
     private Double recommendationFee;
+    private Long agency;
 
     public AngelGuiderShare() {
     }
@@ -52,6 +53,7 @@ public class AngelGuiderShare implements Serializable {
         this.patientName = registration.getPatientName();
         this.hospitalName = registration.getHospitalName();
         this.type = 0;
+        this.agency = registration.getAngelGuider().getAgency();
         this.amount = registration.getHospital().getRecommendationFee();
     }
 
@@ -233,9 +235,26 @@ public class AngelGuiderShare implements Serializable {
         this.recommendationFee = recommendationFee;
     }
 
+
     @Transient
     private boolean isRecommendationFee() {
         return type == 0;
+    }
+
+    @Transient
+    public Integer getOutTransactionCode() {
+        if (type == 0) return 103;
+        if (type == 1) return 101;
+        if (type == 2) return 102;
+        return null;
+    }
+
+    @Transient
+    public Integer getInTransactionCode() {
+        if (type == 0) return 205;
+        if (type == 1) return 203;
+        if (type == 2) return 204;
+        return null;
     }
 
     public void settle(Registration registration) {
@@ -243,5 +262,13 @@ public class AngelGuiderShare implements Serializable {
         this.setAngelGuiderShareAmount(amount * angelGuiderShare);
         this.setHospitalPayableAmount(isRecommendationFee() ? this.recommendationFee : (type == 1 ? amount * recipeShare : prescriptionShare * amount));
         this.setPlatformShareAmount(amount - getAgentShareAmount() - getAngelGuiderShareAmount());
+    }
+
+    public Long getAgency() {
+        return agency;
+    }
+
+    public void setAgency(Long agency) {
+        this.agency = agency;
     }
 }

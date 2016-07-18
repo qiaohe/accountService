@@ -1,6 +1,7 @@
 package cn.hisforce;
 
 import cn.hisforce.domain.settlement.SettlementCenter;
+import cn.hisforce.domain.transaction.TransactionHandler;
 import cn.hisforce.listener.MessageListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,13 +38,18 @@ public class Application {
     }
 
     @Bean
-    MessageListener messageListener(CountDownLatch latch, SettlementCenter settlementCenter) {
-        return new MessageListener(latch, settlementCenter);
+    MessageListener messageListener(CountDownLatch latch, SettlementCenter settlementCenter, TransactionHandler handler) {
+        return new MessageListener(latch, settlementCenter, handler);
     }
 
     @Bean
     CountDownLatch latch() {
         return new CountDownLatch(1);
+    }
+
+    @Bean
+    TransactionHandler transactionHandler() {
+        return new TransactionHandler();
     }
 
     @Bean
