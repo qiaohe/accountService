@@ -7,4 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * Created by Johnson on 2016/7/17.
  */
 public interface AccountRepository extends JpaRepository<Account, Long> {
+    public Account findByUidAndType(Long uid, Integer type);
 }

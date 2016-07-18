@@ -1,5 +1,7 @@
 package cn.hisforce.domain;
 
+import cn.hisforce.domain.transaction.TransactionCode;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
@@ -26,6 +28,23 @@ public class TransactionFlow implements Serializable {
     private Double currentBalance;
 
     public TransactionFlow() {
+    }
+
+    public TransactionFlow(String flowNo, Long uid, String accountNo, Long accountId, String comment, Integer transactionCode, Double amount, Long shareId, Double currentBalance) {
+        this();
+        this.flowNo = flowNo;
+        this.uid = uid;
+        this.accountNo = accountNo;
+        this.accountId = accountId;
+        this.comment = comment;
+        this.transactionCode = transactionCode;
+        this.amount = amount;
+        this.shareId = shareId;
+        this.currentBalance = currentBalance;
+    }
+
+    public TransactionFlow(Account account, TransactionCode code, AngelGuiderShare share, Double amount, String flowNo) {
+        this(flowNo, account.getUid(), account.getAccountNo(), account.getId(), code.getComment(), code.getCode(), amount, share.getId(), account.getBalance() + amount);
     }
 
     public Long getId() {
