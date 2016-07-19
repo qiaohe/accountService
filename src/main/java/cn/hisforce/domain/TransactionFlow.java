@@ -44,7 +44,7 @@ public class TransactionFlow implements Serializable {
     }
 
     public TransactionFlow(Account account, TransactionCode code, AngelGuiderShare share, Double amount, String flowNo) {
-        this(flowNo, account.getUid(), account.getAccountNo(), account.getId(), code.getComment(), code.getCode(), amount, share.getId(), account.getBalance() + amount);
+        this(flowNo, account.getUid(), account.getAccountNo(), account.getId(), code.getComment(), code.getCode(), amount, share != null ? share.getId() : null, account.getBalance() + amount);
     }
 
     public Long getId() {

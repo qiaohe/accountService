@@ -1,13 +1,10 @@
 package cn.hisforce.service;
 
-import org.springframework.stereotype.Service;
-
-import javax.transaction.Transactional;
+import cn.hisforce.domain.TransactionFlow;
 
 /**
- * Created by Johnson on 2016/7/17.
+ * Created by Johnson on 2016/7/18.
  */
-@Transactional
-@Service(value = "accountService")
-public class AccountService {
+public interface AccountService {
+    public TransactionFlow deposit(Long hospitalId, Double amount);
 }

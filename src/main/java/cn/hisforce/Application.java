@@ -38,8 +38,8 @@ public class Application {
     }
 
     @Bean
-    MessageListener messageListener(CountDownLatch latch, SettlementCenter settlementCenter, TransactionHandler handler) {
-        return new MessageListener(latch, settlementCenter, handler);
+    MessageListener messageListener(CountDownLatch latch, SettlementCenter settlementCenter, TransactionHandler transactionHandler) {
+        return new MessageListener(latch, settlementCenter, transactionHandler);
     }
 
     @Bean

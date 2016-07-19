@@ -15,13 +15,14 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
  * Created by Johnson on 2016/7/17.
  */
-@Component(value = "TransactionHander")
+@Component(value = "transactionHander")
 public class TransactionHandler {
     private static final String PADDING_FLOW_NO = "0";
     private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
@@ -64,6 +65,17 @@ public class TransactionHandler {
         return String.format("%s-%s", flowNo, StringUtils.leftPad(String.valueOf(sequenceNo), 6, PADDING_FLOW_NO));
     }
 
+    public TransactionFlow perform(Long uid, Integer type, Integer code, Double amount) {
+        Account account = accountRepository.findByUidAndType(uid, type);
+        account.setBalance(account.getBalance() + amount);
+        account.setAvailableBalance(account.getAvailableBalance() + amount);
+        account.setUpdateDate(new Date());
+        accountRepository.save(account);
+        TransactionFlow flow = new TransactionFlow(account, transactionCodeMap.get(code),
+                null, amount, getTransactionFlowNo());
+        return transactionFlowRepository.save(flow);
+    }
+
     public void handle(AngelGuiderShare share) {
         Account account = getHospitalAccount(share);
         if (share.getHospitalPayableAmount() > 0) {
@@ -89,7 +101,4 @@ public class TransactionHandler {
         }
     }
 
-    public static void main(String[] args) {
-        System.out.println();
-    }
 }
