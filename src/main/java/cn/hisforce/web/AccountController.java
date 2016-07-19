@@ -26,4 +26,13 @@ public class AccountController {
         Double amount = Double.valueOf(map.get("amount").toString());
         return accountService.deposit(hospitalId, amount);
     }
+
+    @RequestMapping(value = "/accounts/withdraw", method = RequestMethod.POST)
+    @ResponseBody
+    public TransactionFlow withdraw(@RequestBody Map map) {
+        Long uid = Long.valueOf(map.get("uid").toString());
+        Double amount = Double.valueOf(map.get("amount").toString());
+        return accountService.withdraw(uid, amount);
+    }
+
 }

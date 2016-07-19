@@ -15,6 +15,11 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public TransactionFlow deposit(Long hospitalId, Double amount) {
-        return transactionHandler.perform(hospitalId, 1, 205, amount);
+        return transactionHandler.perform(hospitalId, 1, 206, amount);
+    }
+
+    @Override
+    public TransactionFlow withdraw(Long uid, Double amount) {
+        return transactionHandler.perform(uid, 0, 106, amount);
     }
 }

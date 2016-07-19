@@ -5,6 +5,7 @@ import cn.hisforce.domain.transaction.TransactionCode;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.DoubleSummaryStatistics;
 
 /**
  * Created by Johnson on 2016/7/17.
@@ -26,6 +27,9 @@ public class TransactionFlow implements Serializable {
     private Double amount;
     private Long shareId;
     private Double currentBalance;
+    private Integer type = 0;
+    private Integer status = 2;
+
 
     public TransactionFlow() {
     }
@@ -133,5 +137,21 @@ public class TransactionFlow implements Serializable {
 
     public void setCurrentBalance(Double currentBalance) {
         this.currentBalance = currentBalance;
+    }
+
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 }

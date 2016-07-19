@@ -7,4 +7,6 @@ import cn.hisforce.domain.TransactionFlow;
  */
 public interface AccountService {
     public TransactionFlow deposit(Long hospitalId, Double amount);
+
+    public TransactionFlow withdraw(Long uid, Double amount);
 }

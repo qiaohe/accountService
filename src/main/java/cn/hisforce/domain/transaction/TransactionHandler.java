@@ -2,7 +2,6 @@ package cn.hisforce.domain.transaction;
 
 import cn.hisforce.domain.Account;
 import cn.hisforce.domain.AngelGuiderShare;
-import cn.hisforce.domain.Registration;
 import cn.hisforce.domain.TransactionFlow;
 import cn.hisforce.repository.AccountRepository;
 import cn.hisforce.repository.RedisRepository;
@@ -36,12 +35,10 @@ public class TransactionHandler {
     @Autowired
     private TransactionFlowRepository transactionFlowRepository;
 
-    private Account platformAccount;
     private Map<Integer, TransactionCode> transactionCodeMap = new HashMap<>();
 
     @PostConstruct
     private void init() {
-        platformAccount = accountRepository.findByUidAndType(999L, 2);
         for (TransactionCode code : transactionCodeRepository.findAll()) {
             transactionCodeMap.put(code.getCode(), code);
         }
@@ -66,6 +63,7 @@ public class TransactionHandler {
     }
 
     public TransactionFlow perform(Long uid, Integer type, Integer code, Double amount) {
+        if (amount < 0.001) return null;
         Account account = accountRepository.findByUidAndType(uid, type);
         account.setBalance(account.getBalance() + amount);
         account.setAvailableBalance(account.getAvailableBalance() + amount);
@@ -77,28 +75,10 @@ public class TransactionHandler {
     }
 
     public void handle(AngelGuiderShare share) {
-        Account account = getHospitalAccount(share);
-        if (share.getHospitalPayableAmount() > 0) {
-            TransactionFlow flow = new TransactionFlow(account, transactionCodeMap.get(share.getOutTransactionCode()), share, share.getHospitalPayableAmount(), getTransactionFlowNo());
-            transactionFlowRepository.save(flow);
-        }
-        if (share.getPlatformShareAmount() > 0) {
-            TransactionFlow platformFlow = new TransactionFlow(platformAccount, transactionCodeMap.get(share.getInTransactionCode()), share, share.getPlatformShareAmount(), getTransactionFlowNo());
-            transactionFlowRepository.save(platformFlow);
-        }
-        if (share.getAngelGuiderShareAmount() > 0) {
-            Account angelGuiderAccount = getAngelGuiderAccount(share);
-            TransactionFlow angelGuideFlow = new TransactionFlow(angelGuiderAccount, transactionCodeMap.get(share.getInTransactionCode()), share, share.getAngelGuiderShareAmount(), getTransactionFlowNo());
-            transactionFlowRepository.save(angelGuideFlow);
-            if (share.getAgency() != null) {
-                Account agentAccount = getAgentAccount(share);
-                TransactionFlow agentFlow = new TransactionFlow(agentAccount, transactionCodeMap.get(share.getInTransactionCode()), share, share.getAgentShareAmount(), getTransactionFlowNo());
-                transactionFlowRepository.save(agentFlow);
-            } else {
-                TransactionFlow agentFlow = new TransactionFlow(angelGuiderAccount, transactionCodeMap.get(share.getInTransactionCode()), share, share.getAgentShareAmount(), getTransactionFlowNo());
-                transactionFlowRepository.save(agentFlow);
-            }
-        }
+        perform(share.getHospitalId(), 1, share.getOutTransactionCode(), share.getHospitalPayableAmount() * (-1));
+        perform(999L, 1, share.getInTransactionCode(), share.getPlatformShareAmount());
+        perform(share.getAngelGuider(), 0, 202, share.getAngelGuiderShareAmount());
+        perform(share.getAgency() != null ? share.getAgency() : share.getAngelGuider(), 0, 201, share.getAgentShareAmount());
     }
 
 }

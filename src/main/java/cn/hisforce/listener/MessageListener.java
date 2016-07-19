@@ -14,8 +14,6 @@ import java.util.concurrent.CountDownLatch;
  */
 public class MessageListener {
     private static final Logger LOGGER = LoggerFactory.getLogger(MessageListener.class);
-
-
     private CountDownLatch latch;
     private SettlementCenter settlementCenter;
     private TransactionHandler transactionHandler;
