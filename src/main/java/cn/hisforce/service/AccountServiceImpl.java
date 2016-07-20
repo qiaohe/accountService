@@ -20,6 +20,6 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public TransactionFlow withdraw(Long uid, Double amount) {
-        return transactionHandler.perform(uid, 0, 106, amount);
+        return transactionHandler.perform(uid, 0, 106, -1 * amount);
     }
 }
